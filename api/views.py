@@ -1,41 +1,41 @@
 from django.shortcuts import render
-
-from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated,AllowAny
 from rest_framework import generics
-from django.contrib.auth.models import User
-from .models import Task,Trivia,Genre
+from .models import Trivia,Genre,Profile,Comment
 from rest_framework import viewsets
-from .serializers import UserSerializer,TaskSerializer,GenreSerializer,TriviaSerializer
-from .ownpermissions import ProfilePermission
+from . import serializers
 
-class UserViewSet(viewsets.ModelViewSet):
-  queryset = User.objects.all()
-  serializer_class = UserSerializer
-  permission_classes = (ProfilePermission,)
+class CreateUserView(generics.CreateAPIView):
+  serializer_class = serializers.UserSerializer
+  permission_classes = (AllowAny,)
 
-class ManageUserView(generics.RetrieveUpdateAPIView):
-  serializer_class = UserSerializer
-  authentication_classes = (TokenAuthentication,)
-  permission_classes = (IsAuthenticated,)
+class ProfileViewSet(viewsets.ModelViewSet):
+  queryset = Profile.objects.all()
+  serializer_class = serializers.ProfileSerializer
+  
+  def perform_create(self,selializer):
+    selializer.save(userProfile=self.request.user)
 
-  def get_object(self):
-    return self.request.user
-
-class TaskViewSet(viewsets.ModelViewSet):
-  queryset = Task.objects.all()
-  serializer_class = TaskSerializer
-  authentication_classes = (TokenAuthentication,)
-  permission_classes = (IsAuthenticated,)
+class MyProfileListView(generics.ListAPIView):
+  queryset = Profile.objects.all()
+  serializer_class = serializers.ProfileSerializer
+  def get_queryset(self):
+    return self.queryset.fileter(userProfile=self.request.user)
 
 class GenreViewSet(viewsets.ModelViewSet):
   queryset = Genre.objects.all()
-  serializer_class = GenreSerializer
-  authentication_classes = (TokenAuthentication,)
-  permission_classes = (IsAuthenticated,)
+  serializer_class = serializers.GenreSerializer
 
 class TriviaViewSet(viewsets.ModelViewSet):
   queryset = Trivia.objects.all()
-  serializer_class = TriviaSerializer
-  authentication_classes = (TokenAuthentication,)
-  permission_classes = (IsAuthenticated,)
+  serializer_class = serializers.TriviaSerializer
+
+  def perform_create(self,selializer):
+    serialzer.save(userPost=self.request.user)
+
+class CommentViewSet(viewsets.ModelViewSet):
+  queryset = Comment.objects.all()
+  serializer_class = serializers.CommentSerializer
+
+  def perform_create(self,selializer):
+    serializer.save(userComment=self.request.user)
