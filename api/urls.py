@@ -1,15 +1,16 @@
 from django.urls import path
 from django.conf.urls import include
 from rest_framework import routers
-from .views import TaskViewSet,UserViewSet,ManageUserView,GenreViewSet,TriviaViewSet
+from . import views
 
 router = routers.DefaultRouter()
-router.register('tasks',TaskViewSet)
-router.register('users',UserViewSet)
-router.register('genres',GenreViewSet)
-router.register('trivias',TriviaViewSet)
+router.register('genres',views.GenreViewSet)
+router.register('trivias',views.TriviaViewSet)
+router.register('profile',views.ProfileViewSet)
+router.register('commnet',views.CommentViewSet)
 
 urlpatterns = [
-    path('myself/',ManageUserView.as_view(),name='myself'),
-    path('',include(router.urls))
+    path('',include(router.urls)),
+    path('register/',views.CreateUserView.as_view(),name='register'),
+    path('myprofile/',views.MyProfileListView.as_view(),name='myprofile'),
 ]
