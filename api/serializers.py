@@ -11,7 +11,6 @@ class UserSerializer(serializers.ModelSerializer):
   
   def create(self,validated_data):
     user = get_user_model().objects.create_user(**validated_data)
-    # Token.objects.create(user=user)
     return user
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -28,7 +27,7 @@ class GenreSerializer(serializers.ModelSerializer):
     fields = ('id','name')
 
 class TriviaSerializer(serializers.ModelSerializer):
-  # user = UserSerializer(read_only=True)
+  # userPost = UserSerializer(read_only=True)
   # genre = GenreSerializer(read_only=True)
   created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M",read_only=True)
 

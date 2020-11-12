@@ -6,8 +6,8 @@ from . import views
 router = routers.DefaultRouter()
 router.register('genres',views.GenreViewSet)
 router.register('trivias',views.TriviaViewSet)
-router.register('profile',views.ProfileViewSet)
-router.register('commnet',views.CommentViewSet)
+router.register('profiles',views.ProfileViewSet)
+router.register('comment',views.CommentViewSet)
 
 urlpatterns = [
     path('',include(router.urls)),
