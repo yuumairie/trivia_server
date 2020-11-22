@@ -30,10 +30,13 @@ class TriviaSerializer(serializers.ModelSerializer):
   # userPost = UserSerializer(read_only=True)
   # genre = GenreSerializer(read_only=True)
   created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M",read_only=True)
-
+  # def get_userPost(self, obj):
+  #       return obj.user.username
+  # def get_genre(self, obj):
+  #       return obj.genre.name
   class Meta:
     model = Trivia
-    fields = ('id','userPost','genre','content','created_at')
+    fields = ('id','userPost','genre','content','created_at','explanation','good_count')
     extra_kwargs = {'userPost':{'read_only':True}}
 
 class CommentSerializer(serializers.ModelSerializer):
