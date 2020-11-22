@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework.permissions import IsAuthenticated,AllowAny
+from rest_framework.permissions import IsAuthenticated,AllowAny,IsAuthenticatedOrReadOnly
 from rest_framework import generics
 from .models import Trivia,Genre,Profile,Comment
 from rest_framework import viewsets
@@ -31,7 +31,7 @@ class GenreViewSet(viewsets.ModelViewSet):
   permission_classes = (AllowAny,)
 
 class TriviaViewSet(viewsets.ModelViewSet):
-  permission_classes = (ProfilePermission,)
+  permission_classes = (IsAuthenticatedOrReadOnly,)
   queryset = Trivia.objects.all()
   serializer_class = serializers.TriviaSerializer
 

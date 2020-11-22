@@ -67,7 +67,8 @@ class Trivia(models.Model):
     settings.AUTH_USER_MODEL, related_name='userPost'
     ,on_delete=models.CASCADE)
   genre = models.ForeignKey(Genre,on_delete=models.CASCADE)
-  content = models.TextField(max_length=255)
+  content = models.TextField(max_length=50)
+  explanation = models.CharField(max_length=255,blank=True)
   good_count = models.IntegerField(default=0)
   created_at = models.DateTimeField(auto_now_add=True)
 
