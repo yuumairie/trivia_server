@@ -7,7 +7,8 @@ router = routers.DefaultRouter()
 router.register('genres',views.GenreViewSet)
 router.register('trivias',views.TriviaViewSet)
 router.register('profiles',views.ProfileViewSet)
-router.register('comment',views.CommentViewSet)
+router.register('comments',views.CommentViewSet)
+router.register('goods',views.GoodViewSet)
 
 urlpatterns = [
     path('',include(router.urls)),

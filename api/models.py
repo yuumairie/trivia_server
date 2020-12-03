@@ -11,12 +11,12 @@ def upload_post_path(instance,filename):
   return '/'.join(['posts',str(instance.userPost.id)+str(instance.content)+str(".")+str(ext)])
 
 class UserManager(BaseUserManager):
-  def create_user(self,email,password=None):
+  def create_user(self,email,password,username):
 
     if not email:
       raise ValueError('email is must')
 
-    user = self.model(email=self.normalize_email(email))
+    user = self.model(email=self.normalize_email(email),username=username)
     user.set_password(password)
     user.save(using=self._db)
 
@@ -69,7 +69,7 @@ class Trivia(models.Model):
   genre = models.ForeignKey(Genre,on_delete=models.CASCADE)
   content = models.TextField(max_length=50)
   explanation = models.CharField(max_length=255,blank=True)
-  good_count = models.IntegerField(default=0)
+  good = models.ManyToManyField(settings.AUTH_USER_MODEL,verbose_name='好ユーザリスト', through='Good')
   created_at = models.DateTimeField(auto_now_add=True)
 
 class Comment(models.Model):
@@ -82,4 +82,17 @@ class Comment(models.Model):
 
   def __str__(self):
     return self.text
+  
+class Good(models.Model):
+  userId = models.ForeignKey(
+    settings.AUTH_USER_MODEL,on_delete=models.CASCADE
+    ,related_name='user_relationships'
+  )
+  triviaId = models.ForeignKey(Trivia,on_delete=models.CASCADE
+  ,related_name='trivia_relationships'
+  )
 
+  class Meta:
+    constraints = [
+      models.UniqueConstraint(fields=['userId','triviaId'],name='unique_set')
+    ]
