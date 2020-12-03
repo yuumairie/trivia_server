@@ -1,13 +1,12 @@
 from rest_framework import serializers
-from .models import Genre,Trivia,Profile,Comment
+from .models import Genre,Trivia,Profile,Comment,Good
 from django.contrib.auth import get_user_model
-# from rest_framework.authtoken.models import Token
 
 class UserSerializer(serializers.ModelSerializer):
   class Meta:
     model = get_user_model()
     fields = ('id','email','password','username')
-    extra_kwargs = {'password':{'write_only':True,'required':True}}
+    extra_kwargs = {'password':{'write_only':True,'required':True},'email':{'write_only':True}}
   
   def create(self,validated_data):
     user = get_user_model().objects.create_user(**validated_data)
@@ -26,17 +25,25 @@ class GenreSerializer(serializers.ModelSerializer):
     model = Genre
     fields = ('id','name')
 
-class TriviaSerializer(serializers.ModelSerializer):
-  # userPost = UserSerializer(read_only=True)
-  # genre = GenreSerializer(read_only=True)
-  created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M",read_only=True)
-  # def get_userPost(self, obj):
-  #       return obj.user.username
-  # def get_genre(self, obj):
-  #       return obj.genre.name
+class GoodSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = Good
+    fields = ('userId','triviaId')
+
+class TriviaWriteSerializer(serializers.ModelSerializer):
   class Meta:
     model = Trivia
-    fields = ('id','userPost','genre','content','created_at','explanation','good_count')
+    fields = ('id','userPost','genre','content','created_at','explanation','good')
+    extra_kwargs = {'userPost':{'read_only':True}}
+
+class TriviaReadSerializer(serializers.ModelSerializer):
+  userPost = UserSerializer(read_only=True)
+  genre = GenreSerializer(read_only=True)
+  good = UserSerializer(many=True, read_only=True)
+  created_at = serializers.DateTimeField(format="%Y/%m/%d")
+  class Meta:
+    model = Trivia
+    fields = ('id','userPost','genre','content','created_at','explanation','good')
     extra_kwargs = {'userPost':{'read_only':True}}
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -44,3 +51,4 @@ class CommentSerializer(serializers.ModelSerializer):
     model = Comment
     fields = ('id','text','userComment','post')
     extra_kwargs={'userComment':{'read_only':True}}
+
