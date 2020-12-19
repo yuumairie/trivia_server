@@ -34,6 +34,12 @@ class GenreViewSet(viewsets.ModelViewSet):
   serializer_class = serializers.GenreSerializer
   permission_classes = (AllowAny,)
 
+class GoodViewSet(viewsets.ModelViewSet):
+  queryset = Good.objects.all()
+  serializer_class = serializers.GoodSerializer
+  permission_classes = (IsAuthenticatedOrReadOnly,)
+  # def get_queryset(self):
+  #   return self.queryset.filter(user=self.request.user)
 
 class TriviaViewSet(viewsets.ModelViewSet):
   permission_classes = (IsAuthenticatedOrReadOnly,)
@@ -53,15 +59,3 @@ class CommentViewSet(viewsets.ModelViewSet):
 
   def perform_create(self,selializer):
     serializer.save(userComment=self.request.user)
-
-class GoodViewSet(viewsets.ModelViewSet):
-  queryset = Good.objects.all()
-  serializer_class = serializers.GoodSerializer
-  permission_classes = (IsAuthenticatedOrReadOnly,)
-
-  def get_object(self, userId,triviaId):
-    return Good.objects.get(userId=userId,triviaId=triviaId)
-
-  def destroy(self, request, pk=None):
-    instance = self.get_object(request.userId,request.triviaId)
-    self.perform_destroy(instance)
