@@ -28,22 +28,22 @@ class GenreSerializer(serializers.ModelSerializer):
 class GoodSerializer(serializers.ModelSerializer):
   class Meta:
     model = Good
-    fields = ('userId','triviaId')
+    fields = ('id','user','trivia',)
 
 class TriviaWriteSerializer(serializers.ModelSerializer):
   class Meta:
     model = Trivia
-    fields = ('id','userPost','genre','content','created_at','explanation','good')
+    fields = ('id','userPost','genre','content','created_at','good','explanation')
     extra_kwargs = {'userPost':{'read_only':True}}
 
 class TriviaReadSerializer(serializers.ModelSerializer):
   userPost = UserSerializer(read_only=True)
   genre = GenreSerializer(read_only=True)
-  good = UserSerializer(many=True, read_only=True)
+  good = UserSerializer(many=True)
   created_at = serializers.DateTimeField(format="%Y/%m/%d")
   class Meta:
     model = Trivia
-    fields = ('id','userPost','genre','content','created_at','explanation','good')
+    fields = ('id','userPost','genre','content','created_at','good','explanation')
     extra_kwargs = {'userPost':{'read_only':True}}
 
 class CommentSerializer(serializers.ModelSerializer):

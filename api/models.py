@@ -69,7 +69,7 @@ class Trivia(models.Model):
   genre = models.ForeignKey(Genre,on_delete=models.CASCADE)
   content = models.TextField(max_length=50)
   explanation = models.CharField(max_length=255,blank=True)
-  good = models.ManyToManyField(settings.AUTH_USER_MODEL,verbose_name='好ユーザリスト', through='Good')
+  good = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Good')
   created_at = models.DateTimeField(auto_now_add=True)
 
 class Comment(models.Model):
@@ -84,15 +84,15 @@ class Comment(models.Model):
     return self.text
   
 class Good(models.Model):
-  userId = models.ForeignKey(
+  user = models.ForeignKey(
     settings.AUTH_USER_MODEL,on_delete=models.CASCADE
     ,related_name='user_relationships'
   )
-  triviaId = models.ForeignKey(Trivia,on_delete=models.CASCADE
+  trivia = models.ForeignKey(Trivia,on_delete=models.CASCADE
   ,related_name='trivia_relationships'
   )
 
   class Meta:
     constraints = [
-      models.UniqueConstraint(fields=['userId','triviaId'],name='unique_set')
+      models.UniqueConstraint(fields=['user','trivia'],name='unique_set')
     ]
