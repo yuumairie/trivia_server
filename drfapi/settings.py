@@ -106,8 +106,12 @@ SIMPLE_JWT = {
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'aws-and-infra',
+        'USER': 'aws-and-infra',
+        'PASSWORD': 'password',
+        'HOST': 'aws-and-infra-web.chs0umzgx9dz.ap-northeast-1.rds.amazonaws.com',
+        'PORT': '3306',
     }
 }
 
